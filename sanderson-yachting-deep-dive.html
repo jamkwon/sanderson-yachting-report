@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sanderson Yachting — Deep Dive SEO, Messaging & Growth Analysis</title>
+<style>
+  :root {
+    --navy: #0B1D3A;
+    --ocean: #1B4B7A;
+    --gold: #C9A84C;
+    --light: #F5F3EE;
+    --white: #FFFFFF;
+    --gray: #6B7280;
+    --lightgray: #E5E7EB;
+    --red: #DC2626;
+    --green: #059669;
+    --amber: #D97706;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', -apple-system, sans-serif; color: var(--navy); background: var(--white); line-height: 1.65; }
+
+  .cover { background: linear-gradient(135deg, var(--navy) 0%, var(--ocean) 100%); color: var(--white); padding: 80px 60px; min-height: 50vh; display: flex; flex-direction: column; justify-content: center; }
+  .cover h1 { font-size: 42px; font-weight: 700; margin-bottom: 16px; letter-spacing: -0.5px; }
+  .cover .subtitle { font-size: 20px; color: var(--gold); font-weight: 500; margin-bottom: 40px; }
+  .cover .meta { font-size: 14px; opacity: 0.7; }
+  .cover .meta span { margin-right: 24px; }
+
+  .container { max-width: 960px; margin: 0 auto; padding: 0 40px; }
+
+  .tldr-section { background: var(--navy); color: var(--white); padding: 48px 60px; margin: 0; }
+  .tldr-section h2 { font-size: 14px; text-transform: uppercase; letter-spacing: 3px; color: var(--gold); margin-bottom: 20px; border: none; padding: 0; }
+  .tldr-section .tldr-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-top: 24px; }
+  .tldr-point { border-left: 3px solid var(--gold); padding-left: 16px; margin-bottom: 20px; }
+  .tldr-point .tldr-label { font-size: 12px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--gold); margin-bottom: 6px; }
+  .tldr-point p { font-size: 15px; color: rgba(255,255,255,0.9); margin: 0; }
+
+  .exec-summary { background: var(--light); padding: 48px 60px; border-left: 4px solid var(--gold); margin: 48px 0; }
+  .exec-summary h2 { font-size: 14px; text-transform: uppercase; letter-spacing: 2px; color: var(--gold); margin-bottom: 16px; border: none; padding: 0; }
+  .exec-summary p { font-size: 17px; color: var(--navy); max-width: 800px; }
+
+  h2 { font-size: 28px; font-weight: 700; margin: 56px 0 24px; padding-bottom: 12px; border-bottom: 2px solid var(--navy); }
+  h3 { font-size: 20px; font-weight: 600; margin: 36px 0 16px; color: var(--ocean); }
+  h4 { font-size: 16px; font-weight: 600; margin: 24px 0 12px; }
+  p { margin-bottom: 16px; font-size: 15.5px; }
+
+  .metric-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin: 24px 0; }
+  .metric-card { background: var(--light); border-radius: 8px; padding: 20px; text-align: center; }
+  .metric-card .value { font-size: 32px; font-weight: 700; color: var(--ocean); }
+  .metric-card .label { font-size: 13px; color: var(--gray); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .metric-card.danger .value { color: var(--red); }
+  .metric-card.success .value { color: var(--green); }
+  .metric-card.warning .value { color: var(--amber); }
+
+  table { width: 100%; border-collapse: collapse; margin: 20px 0 32px; font-size: 14px; }
+  th { background: var(--navy); color: var(--white); padding: 12px 16px; text-align: left; font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; }
+  td { padding: 10px 16px; border-bottom: 1px solid var(--lightgray); }
+  tr:hover td { background: #F9FAFB; }
+  .num { text-align: right; font-variant-numeric: tabular-nums; }
+
+  .tag { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; }
+  .tag-easy { background: #D1FAE5; color: #065F46; }
+  .tag-medium { background: #FEF3C7; color: #92400E; }
+  .tag-hard { background: #FEE2E2; color: #991B1B; }
+  .tag-priority { background: var(--gold); color: var(--navy); }
+  .tag-figmints { background: #DBEAFE; color: #1E40AF; }
+  .tag-client { background: #FEF3C7; color: #92400E; }
+  .tag-collab { background: #E0E7FF; color: #3730A3; }
+
+  .callout { background: #EEF2FF; border-left: 4px solid var(--ocean); padding: 20px 24px; margin: 24px 0; border-radius: 0 8px 8px 0; }
+  .callout.action { background: #FEF3C7; border-left-color: var(--gold); }
+  .callout.critical { background: #FEE2E2; border-left-color: var(--red); }
+  .callout strong { display: block; margin-bottom: 6px; }
+
+  .competitor-compare { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 24px 0; }
+  .comp-card { border: 1px solid var(--lightgray); border-radius: 8px; padding: 16px; }
+  .comp-card.highlight { border-color: var(--gold); background: #FFFBEB; }
+  .comp-card h4 { margin: 0 0 12px; font-size: 14px; }
+  .comp-card .stat { margin-bottom: 8px; }
+  .comp-card .stat-label { font-size: 11px; color: var(--gray); text-transform: uppercase; }
+  .comp-card .stat-value { font-size: 18px; font-weight: 700; }
+
+  .timeline { margin: 24px 0; }
+  .timeline-item { display: flex; gap: 20px; margin-bottom: 32px; }
+  .timeline-marker { flex-shrink: 0; width: 48px; height: 48px; border-radius: 50%; background: var(--ocean); color: var(--white); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; }
+  .timeline-content { flex: 1; }
+  .timeline-content h4 { margin: 0 0 8px; }
+
+  .page-architecture { margin: 24px 0; }
+  .page-node { padding: 12px 16px; border-left: 3px solid var(--ocean); margin-bottom: 8px; background: var(--light); border-radius: 0 6px 6px 0; }
+  .page-node .page-url { font-weight: 600; font-size: 14px; }
+  .page-node .page-target { font-size: 13px; color: var(--gray); margin-top: 4px; }
+  .page-group { margin-left: 24px; }
+
+  .soundbite { background: var(--navy); color: var(--white); padding: 24px 32px; border-radius: 8px; margin: 16px 0; font-size: 20px; font-weight: 600; text-align: center; }
+  .soundbite .context { font-size: 13px; font-weight: 400; color: var(--gold); margin-top: 8px; }
+
+  .kpi-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; margin: 24px 0; }
+  .kpi-card { background: var(--white); border: 2px solid var(--lightgray); border-radius: 12px; padding: 20px 16px; text-align: center; position: relative; overflow: hidden; }
+  .kpi-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; }
+  .kpi-card.kpi-red::before { background: var(--red); }
+  .kpi-card.kpi-green::before { background: var(--green); }
+  .kpi-card.kpi-gold::before { background: var(--gold); }
+  .kpi-card .kpi-name { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: var(--gray); margin-bottom: 12px; }
+  .kpi-card .kpi-current { font-size: 14px; color: var(--red); margin-bottom: 4px; }
+  .kpi-card .kpi-current span { font-size: 28px; font-weight: 700; display: block; }
+  .kpi-card .kpi-arrow { font-size: 20px; color: var(--gold); margin: 8px 0; }
+  .kpi-card .kpi-goal { font-size: 14px; color: var(--green); }
+  .kpi-card .kpi-goal span { font-size: 28px; font-weight: 700; display: block; }
+  .kpi-card .kpi-impact { font-size: 12px; color: var(--gray); margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--lightgray); line-height: 1.4; }
+
+  .ownership-table td:first-child { font-weight: 600; }
+  .ownership-table .owner-cell { text-align: center; }
+
+  .messaging-pillar { background: var(--light); border-radius: 12px; padding: 28px; margin-bottom: 20px; }
+  .messaging-pillar .pillar-name { font-size: 18px; font-weight: 700; color: var(--ocean); margin-bottom: 8px; }
+  .messaging-pillar .pillar-body { font-size: 15px; color: var(--navy); line-height: 1.7; }
+
+  .page-flow { counter-reset: flow-counter; }
+  .flow-step { display: flex; gap: 16px; margin-bottom: 16px; padding: 16px 20px; background: var(--light); border-radius: 8px; }
+  .flow-step::before { counter-increment: flow-counter; content: counter(flow-counter); flex-shrink: 0; width: 32px; height: 32px; background: var(--ocean); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; }
+  .flow-step .flow-label { font-weight: 600; font-size: 14px; margin-bottom: 4px; }
+  .flow-step .flow-detail { font-size: 13px; color: var(--gray); }
+
+  ul, ol { margin: 12px 0 20px 24px; }
+  li { margin-bottom: 8px; font-size: 15px; }
+
+  .section-divider { height: 4px; background: linear-gradient(90deg, var(--navy) 0%, var(--gold) 50%, var(--ocean) 100%); margin: 64px 0; border-radius: 2px; }
+
+  @media (max-width: 768px) {
+    .cover { padding: 40px 24px; }
+    .cover h1 { font-size: 28px; }
+    .container { padding: 0 20px; }
+    .competitor-compare { grid-template-columns: 1fr 1fr; }
+    .metric-grid { grid-template-columns: 1fr 1fr; }
+    .kpi-row { grid-template-columns: 1fr 1fr; }
+    .tldr-section .tldr-grid { grid-template-columns: 1fr; }
+    .tldr-section { padding: 32px 24px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <h1>Sanderson Yachting</h1>
+  <div class="subtitle">Deep Dive: SEO, Messaging & Growth Analysis</div>
+  <p style="max-width:700px;font-size:16px;opacity:0.85;margin-bottom:32px;">Data-backed analysis of organic search position, competitive landscape, keyword opportunities, messaging framework, and a prioritized 90-day action plan. Built on live Ahrefs data, not guesswork.</p>
+  <div class="meta">
+    <span>Prepared by Figmints</span>
+    <span>Data Source: Ahrefs API (April 2026)</span>
+    <span>For: Erin Pavane, CEO</span>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- TLDR SECTION -->
+<!-- ============================================ -->
+<div class="tldr-section">
+  <h2>TLDR</h2>
+  <p style="font-size:17px;color:rgba(255,255,255,0.95);max-width:800px;margin-bottom:24px;">Sanderson has real traction, a sharp messaging direction, and a founder who knows the category cold. What's missing is the organic search infrastructure to turn that expertise into traffic, and a systemized way to convert that traffic into qualified inquiries. Here are the five things that matter most right now:</p>
+
+  <div class="tldr-grid">
+    <div>
+      <div class="tldr-point">
+        <div class="tldr-label">Biggest SEO Gap</div>
+        <p>Sanderson ranks for 21 keywords. Epic Yacht Charters (similar authority) ranks for 1,230. The difference isn't content quality — it's that Sanderson has zero destination landing pages, an underbuilt pricing page, and an all-inclusive page sitting at position 90. Building 12–15 targeted pages against low-difficulty keywords (KD 0–18) could 5–7x organic traffic within 6 months.</p>
+      </div>
+      <div class="tldr-point">
+        <div class="tldr-label">Fastest Win</div>
+        <p>Sanderson already ranks #1 for "how much is a yacht charter" but gets near-zero clicks — the SERP snippet likely needs rewriting. A 10-minute title tag fix + expanding the pricing page into a comprehensive cost guide targets a cluster worth 2,450+ monthly searches at KD 3–7.</p>
+      </div>
+      <div class="tldr-point">
+        <div class="tldr-label">Messaging is Dialed</div>
+        <p>"Say Yes to Luxury Yacht Clients" is the right headline. The three pillars — Give the Most Get the Most, White-Glove White-Labeled, and From Inquiry to Itinerary — give us a complete StoryBrand-aligned framework. Now it needs to get onto the site, into the advisor kit, and into every conversion touchpoint.</p>
+      </div>
+    </div>
+    <div>
+      <div class="tldr-point">
+        <div class="tldr-label">Biggest Revenue Lever</div>
+        <p>The travel advisor channel. The messaging is sharp, the model is differentiated, and the competitive landscape is wide open — Charter Smarter's /travel-agent/ page ranks for nothing. A dedicated /for-travel-advisors/ landing page with the full StoryBrand flow, plus a downloadable Advisor Kit, is the single highest-ROI asset we can build in Month 1.</p>
+      </div>
+      <div class="tldr-point">
+        <div class="tldr-label">What We Need From Erin</div>
+        <p>Messaging approval, pricing details/ranges for the cost guide, confirmation on destination priorities, and access to current advisor-facing materials for refinement. Everything else — the page builds, the SEO optimization, the HubSpot work, the content creation — Figmints owns and executes.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- ============================================ -->
+<h2>1. Five Metrics That Matter — Current vs. Goal</h2>
+<!-- ============================================ -->
+
+<p>These are the five numbers we'll track monthly. They're measurable, they connect directly to business outcomes, and they tell us whether the work is moving the needle or not.</p>
+
+<div class="kpi-row">
+  <div class="kpi-card kpi-red">
+    <div class="kpi-name">Organic Keywords<br>(US, Ahrefs)</div>
+    <div class="kpi-current">Now<span>21</span></div>
+    <div class="kpi-arrow">&#8595;</div>
+    <div class="kpi-goal">6-Mo Goal<span>150+</span></div>
+    <div class="kpi-impact">Epic has 1,230 at similar DR. 150 is conservative — it means the new pages are indexing and ranking.</div>
+  </div>
+  <div class="kpi-card kpi-red">
+    <div class="kpi-name">Monthly Organic<br>Traffic</div>
+    <div class="kpi-current">Now<span>~30</span></div>
+    <div class="kpi-arrow">&#8595;</div>
+    <div class="kpi-goal">6-Mo Goal<span>500+</span></div>
+    <div class="kpi-impact">At average CPCs of $100–$200, 500 organic visits/mo = $50K–$100K in equivalent ad spend saved.</div>
+  </div>
+  <div class="kpi-card kpi-red">
+    <div class="kpi-name">Domain<br>Rating</div>
+    <div class="kpi-current">Now<span>14</span></div>
+    <div class="kpi-arrow">&#8595;</div>
+    <div class="kpi-goal">6-Mo Goal<span>25–30</span></div>
+    <div class="kpi-impact">Matches Epic (DR 27). Unlocks Tier 2 keywords (KD 20–40) and makes every page more competitive.</div>
+  </div>
+  <div class="kpi-card kpi-gold">
+    <div class="kpi-name">Pages Ranking<br>on Page 1</div>
+    <div class="kpi-current">Now<span>3</span></div>
+    <div class="kpi-arrow">&#8595;</div>
+    <div class="kpi-goal">6-Mo Goal<span>12+</span></div>
+    <div class="kpi-impact">Currently 3 pages on page 1 (meltemi winds, Below Deck, pricing). Each new page-1 ranking = a new qualified traffic source.</div>
+  </div>
+  <div class="kpi-card kpi-gold">
+    <div class="kpi-name">Inquiry Form<br>Conversion Rate</div>
+    <div class="kpi-current">Now<span>~3%</span></div>
+    <div class="kpi-arrow">&#8595;</div>
+    <div class="kpi-goal">6-Mo Goal<span>5–7%</span></div>
+    <div class="kpi-impact">At 500 visits/mo, going from 3% to 6% = 15 extra inquiries/month from organic alone. At luxury charter values, that's real pipeline.</div>
+  </div>
+</div>
+
+<div class="callout">
+  <strong>What these goals look like in business terms:</strong>
+  If we hit 500 organic visits/month at a 5% inquiry conversion rate, that's 25 inbound organic inquiries per month — people who searched for exactly what Sanderson offers and found the site. At current charter values, even converting a fraction of those into bookings meaningfully moves the needle toward the $100K/month profit goal. And unlike paid, this traffic compounds — it doesn't stop when the budget stops.
+</div>
+
+<!-- ============================================ -->
+<div class="section-divider"></div>
+<h2>2. Where Sanderson Stands Right Now</h2>
+<!-- ============================================ -->
+
+<div class="metric-grid">
+  <div class="metric-card danger">
+    <div class="value">14</div>
+    <div class="label">Domain Rating</div>
+  </div>
+  <div class="metric-card danger">
+    <div class="value">21</div>
+    <div class="label">Organic Keywords (US)</div>
+  </div>
+  <div class="metric-card danger">
+    <div class="value">~30</div>
+    <div class="label">Organic Visits/Month</div>
+  </div>
+  <div class="metric-card warning">
+    <div class="value">63</div>
+    <div class="label">Referring Domains</div>
+  </div>
+  <div class="metric-card">
+    <div class="value">131</div>
+    <div class="label">Live Backlinks</div>
+  </div>
+  <div class="metric-card warning">
+    <div class="value">1</div>
+    <div class="label">Keywords in Top 3</div>
+  </div>
+</div>
+
+<h3>What's Actually Ranking</h3>
+<p>Only 8 pages on the entire site receive any organic traffic at all. Here's what's working:</p>
+
+<table>
+  <thead>
+    <tr><th>Page</th><th>Top Keyword</th><th class="num">Keyword Vol</th><th class="num">Position</th><th class="num">Monthly Traffic</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>/charter-below-deck-yachts/</td><td>below deck yacht rental</td><td class="num">150</td><td class="num">9</td><td class="num">10</td></tr>
+    <tr><td>/truth-about-meltemi-winds.../</td><td>meltemi winds</td><td class="num">150</td><td class="num">6</td><td class="num">9</td></tr>
+    <tr><td>/saint-david/</td><td>st david yacht below deck</td><td class="num">150</td><td class="num">7</td><td class="num">8</td></tr>
+    <tr><td>/private-yacht-charter-vs-cruise/</td><td>yacht vs cruise</td><td class="num">40</td><td class="num">8</td><td class="num">3</td></tr>
+    <tr><td>/planning-a-yacht-charter-for-a-group-of-12.../</td><td>12 person yacht</td><td class="num">30</td><td class="num">10</td><td class="num">1</td></tr>
+    <tr><td>/yacht-charter-pricing-and-costs/</td><td>how much is a yacht charter</td><td class="num">100</td><td class="num">1</td><td class="num">&lt;1</td></tr>
+    <tr><td>/all-inclusive-charters/</td><td>all inclusive yacht charters</td><td class="num">200</td><td class="num">90</td><td class="num">0</td></tr>
+  </tbody>
+</table>
+
+<div class="callout critical">
+  <strong>Key Finding: Sanderson ranks #1 for "how much is a yacht charter" but gets near-zero traffic.</strong>
+  This means the SERP snippet (title tag + meta description) isn't compelling enough to earn clicks — or the ranking is volatile. Either way, this page is proof Sanderson CAN rank. The fix is a better title tag and expanding the page into a definitive cost guide targeting the full pricing keyword cluster (2,450+ combined monthly searches).
+</div>
+
+<div class="callout">
+  <strong>What This Tells Us</strong>
+  The site's organic presence is almost entirely driven by "Below Deck" branded curiosity searches and one informational weather article. Zero destination pages rank. Zero charter-type pages rank meaningfully. The all-inclusive page (a huge commercial opportunity) sits at position 90. This is not a content-quality problem — it's a targeting and architecture problem.
+</div>
+
+<!-- ============================================ -->
+<div class="section-divider"></div>
+<h2>3. Competitive Landscape — Real Numbers</h2>
+<!-- ============================================ -->
+
+<div class="competitor-compare">
+  <div class="comp-card highlight">
+    <h4>Sanderson Yachting</h4>
+    <div class="stat"><div class="stat-label">Domain Rating</div><div class="stat-value" style="color:var(--red)">14</div></div>
+    <div class="stat"><div class="stat-label">Organic Keywords</div><div class="stat-value">21</div></div>
+    <div class="stat"><div class="stat-label">Monthly Traffic</div><div class="stat-value">30</div></div>
+    <div class="stat"><div class="stat-label">Ref. Domains</div><div class="stat-value">63</div></div>
+  </div>
+  <div class="comp-card">
+    <h4>Epic Yacht Charters</h4>
+    <div class="stat"><div class="stat-label">Domain Rating</div><div class="stat-value" style="color:var(--green)">27</div></div>
+    <div class="stat"><div class="stat-label">Organic Keywords</div><div class="stat-value">1,230</div></div>
+    <div class="stat"><div class="stat-label">Monthly Traffic</div><div class="stat-value">7,559</div></div>
+    <div class="stat"><div class="stat-label">Ref. Domains</div><div class="stat-value">232</div></div>
+  </div>
+  <div class="comp-card">
+    <h4>DMA Yachting</h4>
+    <div class="stat"><div class="stat-label">Domain Rating</div><div class="stat-value" style="color:var(--green)">45</div></div>
+    <div class="stat"><div class="stat-label">Organic Keywords</div><div class="stat-value">5 (US)</div></div>
+    <div class="stat"><div class="stat-label">Monthly Traffic</div><div class="stat-value">11 (US)</div></div>
+    <div class="stat"><div class="stat-label">Ref. Domains</div><div class="stat-value">122</div></div>
+  </div>
+  <div class="comp-card">
+    <h4>Charter Smarter</h4>
+    <div class="stat"><div class="stat-label">Domain Rating</div><div class="stat-value" style="color:var(--red)">12</div></div>
+    <div class="stat"><div class="stat-label">Organic Keywords</div><div class="stat-value">134</div></div>
+    <div class="stat"><div class="stat-label">Monthly Traffic</div><div class="stat-value">442</div></div>
+    <div class="stat"><div class="stat-label">Ref. Domains</div><div class="stat-value">—</div></div>
+  </div>
+</div>
+
+<h3>What Each Competitor Actually Did Right (and Where They're Beatable)</h3>
+
+<h4>Epic Yacht Charters — The Benchmark</h4>
+<p>Epic is the clearest study in "doing SEO right in this category." At DR 27, they're not a domain authority powerhouse — they just built the right pages. Their homepage alone ranks for 376 keywords and pulls 3,758 visits/month because it targets "luxury yacht charter," "yacht charters," "private yacht charter," and "caribbean yacht charter" simultaneously. Their playbook:</p>
+<ul>
+  <li><strong>Destination-specific landing pages:</strong> /yacht-search/bahamas/ ranks for 112 keywords, drives 868 visits. These are just well-structured destination pages with targeted H1s and internal links.</li>
+  <li><strong>Cost/pricing content:</strong> /booking/yacht-charter-cost/ ranks for 135 keywords, drives 535 visits. Same content lane as Sanderson's pricing page — Epic just has stronger on-page optimization.</li>
+  <li><strong>"All-inclusive" as a dedicated play:</strong> They rank #1 for "all inclusive yacht charter caribbean" and #2 for "all inclusive yacht charter greece." Sanderson's all-inclusive page sits at position 90.</li>
+  <li><strong>Below Deck content:</strong> Their crewed charter/Below Deck page drives 279 visits from 138 keywords. Sanderson's Below Deck page gets 10 from 11 keywords. Same topic, wildly different optimization.</li>
+</ul>
+
+<div class="callout action">
+  <strong>The Implication:</strong> Epic proves you don't need DR 60+ to win in yacht charter SEO. You need targeted pages with clear keyword focus and reasonable on-page optimization. Sanderson can replicate this playbook within 6 months.
+</div>
+
+<h4>DMA Yachting — Misleading at First Glance</h4>
+<p>DMA has a DR of 45 but only 5 ranking US keywords and 11 organic US visits. This confirms what Erin suspected: DMA's strength is likely in European/international markets and across multiple supporting microsites. In US organic search, DMA is essentially invisible on their main domain. Don't use DMA as a US SEO benchmark — use Epic.</p>
+
+<h4>Charter Smarter — Beatable but Instructive</h4>
+<p>At DR 12, Charter Smarter is slightly weaker than Sanderson in authority but pulls 442 visits from 134 keywords — 15x Sanderson's traffic from 6x the keywords. Their BVI itinerary page drives 55 visits from "bvi 7 day sailing itinerary." They also have a /travel-agent/ page that ranks for almost nothing — an opening for Sanderson to own that lane decisively.</p>
+
+<h4>The Real Organic Gorilla: YachtCharterFleet.com</h4>
+<p>DR 70, 12,525 keywords, 143,324 monthly visits. This is the category incumbent. Sanderson won't outrank them on head terms like "yacht charter" (KD 73) soon. But YachtCharterFleet is an inventory aggregator — they don't own education, pricing transparency, or "which charter is right for me?" Sanderson wins in the advice layer, not the inventory layer.</p>
+
+<!-- ============================================ -->
+<div class="section-divider"></div>
+<h2>4. Keyword Opportunities — Prioritized by What Sanderson Can Win</h2>
+<!-- ============================================ -->
+
+<p>Every keyword that matters for Sanderson, sorted into three tiers. The rule: start with Tier 1, don't touch Tier 3 until Tier 1 pages are built and ranking.</p>
+
+<h3>Tier 1: Low Difficulty, High Commercial Value — Build These Pages Now</h3>
+<p>These keywords have real search volume, low competition (KD 0–20), and direct commercial intent. Sanderson can realistically rank on page 1 for all of these within 3–6 months.</p>
+
+<table>
+  <thead>
+    <tr><th>Keyword</th><th class="num">Monthly Volume</th><th class="num">KD</th><th class="num">CPC</th><th>Difficulty</th><th>Page to Build</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>how much does it cost to charter a yacht</td><td class="num">1,100</td><td class="num">4</td><td class="num">$30</td><td><span class="tag tag-easy">Easy</span></td><td>Expand /yacht-charter-pricing-and-costs/</td></tr>
+    <tr><td>how much to charter a yacht</td><td class="num">700</td><td class="num">4</td><td class="num">$40</td><td><span class="tag tag-easy">Easy</span></td><td>Same page (cluster)</td></tr>
+    <tr><td>yacht charter cost</td><td class="num">300</td><td class="num">7</td><td class="num">$50</td><td><span class="tag tag-easy">Easy</span></td><td>Same page (cluster)</td></tr>
+    <tr><td>luxury yacht charter cost</td><td class="num">150</td><td class="num">8</td><td class="num">$45</td><td><span class="tag tag-easy">Easy</span></td><td>Same page (cluster)</td></tr>
+    <tr><td>how much to rent a yacht for a week</td><td class="num">200</td><td class="num">3</td><td class="num">$60</td><td><span class="tag tag-easy">Easy</span></td><td>Same page (cluster)</td></tr>
+    <tr style="background:#F0FDF4"><td colspan="6"><strong>&#8593; Combined pricing cluster: ~2,450 monthly searches, all serviceable by one definitive cost guide</strong></td></tr>
+
+    <tr><td>yacht charter croatia</td><td class="num">1,300</td><td class="num">9</td><td class="num">$190</td><td><span class="tag tag-easy">Easy</span></td><td>/yacht-charter-croatia/</td></tr>
+    <tr><td>yacht charter greece</td><td class="num">1,000</td><td class="num">18</td><td class="num">$200</td><td><span class="tag tag-easy">Easy</span></td><td>/yacht-charter-greece/</td></tr>
+    <tr><td>yacht charter italy</td><td class="num">800</td><td class="num">4</td><td class="num">$150</td><td><span class="tag tag-easy">Easy</span></td><td>/yacht-charter-italy/</td></tr>
+    <tr><td>yacht charter bahamas</td><td class="num">700</td><td class="num">17</td><td class="num">$170</td><td><span class="tag tag-easy">Easy</span></td><td>/yacht-charter-bahamas/</td></tr>
+    <tr><td>yacht charter mediterranean</td><td class="num">700</td><td class="num">12</td><td class="num">$120</td><td><span class="tag tag-easy">Easy</span></td><td>/yacht-charter-mediterranean/ (pillar)</td></tr>
+    <tr><td>catamaran charter</td><td class="num">600</td><td class="num">8</td><td class="num">$100</td><td><span class="tag tag-easy">Easy</span></td><td>/catamaran-charters/</td></tr>
+    <tr><td>yacht charter turkey</td><td class="num">450</td><td class="num">0</td><td class="num">$180</td><td><span class="tag tag-easy">Easy</span></td><td>/yacht-charter-turkey/</td></tr>
+    <tr><td>yacht charter spain</td><td class="num">250</td><td class="num">1</td><td class="num">$110</td><td><span class="tag tag-easy">Easy</span></td><td>/yacht-charter-spain/</td></tr>
+    <tr><td>yacht charter maldives</td><td class="num">200</td><td class="num">2</td><td class="num">$100</td><td><span class="tag tag-easy">Easy</span></td><td>/yacht-charter-maldives/</td></tr>
+    <tr><td>yacht charter tahiti</td><td class="num">150</td><td class="num">5</td><td class="num">$170</td><td><span class="tag tag-easy">Easy</span></td><td>/yacht-charter-tahiti/</td></tr>
+    <tr><td>yacht charter galapagos</td><td class="num">150</td><td class="num">3</td><td class="num">$190</td><td><span class="tag tag-easy">Easy</span></td><td>/yacht-charter-galapagos/</td></tr>
+    <tr><td>yacht charter france</td><td class="num">150</td><td class="num">3</td><td class="num">$130</td><td><span class="tag tag-easy">Easy</span></td><td>/yacht-charter-france/</td></tr>
+    <tr><td>family yacht charter</td><td class="num">150</td><td class="num">0</td><td class="num">$100</td><td><span class="tag tag-easy">Easy</span></td><td>/family-yacht-charters/</td></tr>
+    <tr><td>all inclusive yacht charter</td><td class="num">150</td><td class="num">14</td><td class="num">—</td><td><span class="tag tag-easy">Easy</span></td><td>Rebuild /all-inclusive-charters/</td></tr>
+  </tbody>
+</table>
+
+<div class="callout action">
+  <strong>Total Tier 1 addressable volume: ~7,000+ monthly searches.</strong> At conservative 2–3% CTRs from page-1 rankings, that's 140–210 organic visits/month from Tier 1 alone — a 5–7x increase. At the CPC values shown, that organic traffic has an equivalent paid value of $15,000–$25,000/month.
+</div>
+
+<h3>Tier 2: Medium Difficulty — Build After Authority Grows (Months 4–6)</h3>
+
+<table>
+  <thead>
+    <tr><th>Keyword</th><th class="num">Monthly Volume</th><th class="num">KD</th><th class="num">CPC</th><th>Difficulty</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>yacht charter caribbean</td><td class="num">1,100</td><td class="num">33</td><td class="num">$120</td><td><span class="tag tag-medium">Medium</span></td></tr>
+    <tr><td>luxury yacht charter caribbean</td><td class="num">700</td><td class="num">29</td><td class="num">$160</td><td><span class="tag tag-medium">Medium</span></td></tr>
+    <tr><td>mega yacht charter</td><td class="num">1,900</td><td class="num">35</td><td class="num">$80</td><td><span class="tag tag-medium">Medium</span></td></tr>
+    <tr><td>crewed yacht charter</td><td class="num">350</td><td class="num">36</td><td class="num">$110</td><td><span class="tag tag-medium">Medium</span></td></tr>
+    <tr><td>charter a yacht</td><td class="num">2,700</td><td class="num">44</td><td class="num">$80</td><td><span class="tag tag-medium">Medium</span></td></tr>
+    <tr><td>all inclusive yacht charter caribbean</td><td class="num">150</td><td class="num">26</td><td class="num">$110</td><td><span class="tag tag-medium">Medium</span></td></tr>
+    <tr><td>yacht charter bvi</td><td class="num">350</td><td class="num">20</td><td class="num">$250</td><td><span class="tag tag-medium">Medium</span></td></tr>
+    <tr><td>bareboat yacht charter</td><td class="num">800</td><td class="num">24</td><td class="num">$90</td><td><span class="tag tag-medium">Medium</span></td></tr>
+  </tbody>
+</table>
+
+<h3>Tier 3: Hard — Long-Term Brand Authority Plays</h3>
+
+<table>
+  <thead>
+    <tr><th>Keyword</th><th class="num">Monthly Volume</th><th class="num">KD</th><th>Note</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>yacht charter</td><td class="num">3,500</td><td class="num">73</td><td>Head term — needs DR 40+ realistically</td></tr>
+    <tr><td>private yacht charter</td><td class="num">3,200</td><td class="num">64</td><td>Build toward via long-tail wins</td></tr>
+    <tr><td>luxury yacht charter</td><td class="num">2,100</td><td class="num">61</td><td>Homepage should target this long-term</td></tr>
+    <tr><td>yacht charter broker</td><td class="num">800</td><td class="num">68</td><td>Low traffic potential (150) despite volume</td></tr>
+    <tr><td>yacht charter companies</td><td class="num">700</td><td class="num">77</td><td>Aggregator-dominated — avoid for now</td></tr>
+  </tbody>
+</table>
+
+<!-- ============================================ -->
+<div class="section-divider"></div>
+<h2>5. Messaging Framework — Already Sharp, Now Needs to Ship</h2>
+<!-- ============================================ -->
+
+<p>The messaging work is done at the strategic level. The three pillars, the trueline, and the full StoryBrand script are locked. This section documents how that messaging maps to SEO pages and conversion assets — because good messaging that only lives in a strategy doc doesn't help anyone.</p>
+
+<h3>Core Pillars — The Why / How / What</h3>
+
+<div class="messaging-pillar">
+  <div class="pillar-name">Give the Most, Get the Most</div>
+  <div class="pillar-body">Luxury clients expect the best options, not a stack of guesses. Yacht charters give you a way to deliver a rarer, more exclusive level of travel while earning the kind of commission that makes premium service pay off.</div>
+</div>
+
+<div class="messaging-pillar">
+  <div class="pillar-name">White-Glove, White-Labeled</div>
+  <div class="pillar-body">We stay behind the curtain while you stay at the center of the relationship. We shape the options, sharpen the story, and help you present the charter with the kind of clarity and polish that builds trust fast. You look seasoned. Your client feels taken care of.</div>
+</div>
+
+<div class="messaging-pillar">
+  <div class="pillar-name">From Inquiry to Itinerary</div>
+  <div class="pillar-body">We give you the bones of the sale before the work begins. The options, the pricing, the materials, the emails, the talking points, the details — already shaped, already usable, already built to move. Your client sees a polished luxury experience. We'll make sure it's buttoned up.</div>
+</div>
+
+<h3>The Trueline</h3>
+
+<div class="soundbite">
+  "Say Yes to Luxury Yacht Clients."
+  <div class="context">Primary headline — approved direction</div>
+</div>
+
+<p style="background:var(--light);padding:20px 24px;border-radius:8px;font-size:15px;margin:20px 0;"><strong>Body:</strong> When a luxury client asks for a yacht charter, you should not have to hesitate. We help you handle the details, present the right options, and move from inquiry to itinerary without losing the relationship.<br><br><strong>CTA:</strong> Get the Advisor Kit</p>
+
+<h3>StoryBrand Script — Mapped to Page Sections</h3>
+
+<p>This is how the full StoryBrand script translates into the /for-travel-advisors/ landing page. Each section maps to a specific scroll position:</p>
+
+<div class="page-flow">
+  <div class="flow-step">
+    <div>
+      <div class="flow-label">Hero Section</div>
+      <div class="flow-detail"><strong>H1:</strong> "Say Yes to Luxury Yacht Clients." &nbsp;|&nbsp; <strong>Subhead:</strong> Sanderson helps travel advisors sell private yacht charters without taking on the complexity alone — with curated options, behind-the-scenes booking support, and the highest commissions in the category. &nbsp;|&nbsp; <strong>CTA:</strong> Get the Advisor Kit</div>
+    </div>
+  </div>
+  <div class="flow-step">
+    <div>
+      <div class="flow-label">Problem Section</div>
+      <div class="flow-detail"><strong>External:</strong> A client wants a yacht charter, but suddenly you're dealing with yacht types, destinations, availability, pricing, contracts, deposits, preference sheets, and crew logistics. <strong>Internal:</strong> You don't want to sound unsure in front of a high-value client. <strong>Philosophical:</strong> A great travel advisor should not have to become a yacht broker to serve a client well.</div>
+    </div>
+  </div>
+  <div class="flow-step">
+    <div>
+      <div class="flow-label">Value / Mechanism Section</div>
+      <div class="flow-detail"><strong>White-Glove, White-Labeled.</strong> You stay in front. Sanderson works behind the scenes. The client gets a smoother experience, and you keep control of the relationship. Sanderson doesn't just send inventory — they narrow options, shape the recommendation, and keep the process moving.</div>
+    </div>
+  </div>
+  <div class="flow-step">
+    <div>
+      <div class="flow-label">Proof Section</div>
+      <div class="flow-detail">Operating since 2006. Access to 5,000+ yachts globally. Full-service booking management: contracts, invoicing, payments, preference sheets, crew liaison. Highest commissions in the category. 24/7 support.</div>
+    </div>
+  </div>
+  <div class="flow-step">
+    <div>
+      <div class="flow-label">Plan Section (3 Steps)</div>
+      <div class="flow-detail"><strong>Step 1:</strong> Send the basics — dates, destination, headcount, budget. You get curated yacht options fast. <strong>Step 2:</strong> Review options, pick the right yacht, place a free hold. <strong>Step 3:</strong> Contracts signed, 50% deposit secures the yacht, preference sheets go to crew one month out.</div>
+    </div>
+  </div>
+  <div class="flow-step">
+    <div>
+      <div class="flow-label">Success / Stakes Section</div>
+      <div class="flow-detail"><strong>If they act:</strong> Yacht charters become a revenue stream, not a scramble. They confidently say yes, stay at the center, and earn the highest commissions. <strong>If they don't:</strong> Inquiries keep leaking to outside brokers. Premium revenue walks out the door. Clients assume the advisor can't handle the bigger ask.</div>
+    </div>
+  </div>
+  <div class="flow-step">
+    <div>
+      <div class="flow-label">CTA Section</div>
+      <div class="flow-detail"><strong>Direct CTA:</strong> "Become a Travel Partner" — We walk you through the model, the process, and exactly how to bring us into your next charter inquiry. <strong>Transitional CTA:</strong> "Get the Advisor Kit" — A simple breakdown of how yacht charters work, pre-configured materials, and a cleaner way to talk about destinations, yacht types, pricing, and next steps.</div>
+    </div>
+  </div>
+  <div class="flow-step">
+    <div>
+      <div class="flow-label">FAQ Section (maps to objections)</div>
+      <div class="flow-detail">"Will my client still work through me?" — That's exactly the point. White-Glove, White-Labeled. &nbsp;|&nbsp; "I don't have time to learn a new category." — You don't need to become the expert. You need a system and a partner. &nbsp;|&nbsp; "My clients can just go to another broker." — They can. The faster you answer with clarity, the more likely the opportunity stays with you.</div>
+    </div>
+  </div>
+</div>
+
+<h3>Message Pillars — One-Line References</h3>
+<ul>
+  <li><strong>Promise line:</strong> Say yes to yacht charters without losing the relationship.</li>
+  <li><strong>Differentiation line:</strong> White-glove charter expertise, delivered behind the scenes so the advisor stays in front.</li>
+  <li><strong>Proof line:</strong> Founded in 2006, access to 5,000+ yachts, full-service booking management, and the highest commissions in the category.</li>
+  <li><strong>Brand script:</strong> "We help travel advisors who want to offer private yacht charters but feel slowed down by complexity and uncertainty so they can keep the relationship, close premium trips, and earn more, using a white-glove, white-labeled partner model."</li>
+</ul>
+
+<!-- ============================================ -->
+<div class="section-divider"></div>
+<h2>6. Site Architecture — What Pages Should Exist</h2>
+<!-- ============================================ -->
+
+<p>The specific URL map, with target keywords and priority level for each page.</p>
+
+<h3>Pillar Pages (4 pages — build first)</h3>
+
+<div class="page-architecture">
+  <div class="page-node">
+    <div class="page-url">/yacht-charter-pricing-and-costs/ <span class="tag tag-priority">EXISTS — REBUILD</span></div>
+    <div class="page-target">Target cluster: "how much does it cost to charter a yacht" (1,100) + "yacht charter cost" (300) + "how much to charter a yacht" (700) + 5 more variants = ~2,450 combined volume</div>
+  </div>
+  <div class="page-node">
+    <div class="page-url">/all-inclusive-charters/ <span class="tag tag-priority">EXISTS — REBUILD</span></div>
+    <div class="page-target">Target: "all inclusive yacht charter" (150) + "all inclusive yacht charter caribbean" (150) + related terms. Currently position 90 — should be page 1.</div>
+  </div>
+  <div class="page-node">
+    <div class="page-url">/destinations/ <span class="tag tag-priority">NEW — HUB PAGE</span></div>
+    <div class="page-target">Hub page linking to all destination pages. Targets "yacht charter destinations" and distributes internal linking value.</div>
+  </div>
+  <div class="page-node">
+    <div class="page-url">/family-yacht-charters/ <span class="tag tag-priority">NEW</span></div>
+    <div class="page-target">Target: "family yacht charter" (150, KD 0). Sanderson's core audience. No one owns this page well. KD literally zero.</div>
+  </div>
+</div>
+
+<h3>Destination Pages (10 pages — build in priority order)</h3>
+
+<div class="page-architecture">
+  <div class="page-node">
+    <div class="page-url">/yacht-charter-croatia/</div>
+    <div class="page-target">1,300 vol, KD 9, CPC $190 — Highest ROI destination page. CroatiaLuxuryGulet at DR 13 ranks page 1.</div>
+  </div>
+  <div class="page-node">
+    <div class="page-url">/yacht-charter-greece/</div>
+    <div class="page-target">1,000 vol, KD 18, CPC $200 — PoseidonCharters at DR 6 pulls 1,699 visits.</div>
+  </div>
+  <div class="page-node">
+    <div class="page-url">/yacht-charter-italy/</div>
+    <div class="page-target">800 vol, KD 4, CPC $150 — Near-zero competition.</div>
+  </div>
+  <div class="page-node">
+    <div class="page-url">/yacht-charter-bahamas/</div>
+    <div class="page-target">700 vol, KD 17, CPC $170 — Epic owns this at position 6.</div>
+  </div>
+  <div class="page-node">
+    <div class="page-url">/yacht-charter-mediterranean/</div>
+    <div class="page-target">700 vol, KD 12 — Hub linking to Greece, Croatia, Italy, Turkey, France, Spain.</div>
+  </div>
+  <div class="page-node">
+    <div class="page-url">/yacht-charter-caribbean/</div>
+    <div class="page-target">1,100 vol, KD 33 — Harder but essential. Build first, rank later as authority grows.</div>
+  </div>
+  <div class="page-node">
+    <div class="page-url">/yacht-charter-turkey/</div>
+    <div class="page-target">450 vol, KD 0 — Zero difficulty. Build this page and rank.</div>
+  </div>
+  <div class="page-node">
+    <div class="page-url">/yacht-charter-maldives/</div>
+    <div class="page-target">200 vol, KD 2 — Exotic/aspirational. Low competition.</div>
+  </div>
+  <div class="page-node">
+    <div class="page-url">/yacht-charter-tahiti/</div>
+    <div class="page-target">150 vol, KD 5, CPC $170 — High CPC = strong commercial intent.</div>
+  </div>
+  <div class="page-node">
+    <div class="page-url">/yacht-charter-galapagos/</div>
+    <div class="page-target">150 vol, KD 3, CPC $190 — Highest CPC. Premium audience.</div>
+  </div>
+</div>
+
+<h3>Charter Type + Education Pages</h3>
+
+<div class="page-architecture">
+  <div class="page-node">
+    <div class="page-url">/catamaran-charters/</div>
+    <div class="page-target">"catamaran charter" — 600 vol, KD 8. Distinct audience from motor yacht seekers.</div>
+  </div>
+  <div class="page-node">
+    <div class="page-url">/crewed-yacht-charters/</div>
+    <div class="page-target">"crewed yacht charter" — 350 vol, KD 36. Differentiates from bareboat. Explains full-service model.</div>
+  </div>
+  <div class="page-node">
+    <div class="page-url">/charter-below-deck-yachts/ <span class="tag tag-priority">EXISTS — EXPAND</span></div>
+    <div class="page-target">Already ranks for 11 keywords. Push "how much to charter a yacht on below deck" (250 vol) from position 26 into top 10.</div>
+  </div>
+  <div class="page-node">
+    <div class="page-url">/first-time-yacht-charter-guide/ <span class="tag tag-priority">NEW</span></div>
+    <div class="page-target">Education cornerstone content. Targets the entire "first time" / "how to" / "tips" search cluster.</div>
+  </div>
+  <div class="page-node">
+    <div class="page-url">/for-travel-advisors/ <span class="tag tag-priority">NEW — CRITICAL</span></div>
+    <div class="page-target">Landing page for every advisor outreach, webinar CTA, and partnership pitch. Full StoryBrand flow from Section 5.</div>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<div class="section-divider"></div>
+<h2>7. Competitor Gap — Specific Pages Sanderson Should Beat</h2>
+<!-- ============================================ -->
+
+<table>
+  <thead>
+    <tr><th>Competitor Page</th><th>Their Traffic</th><th>Keyword They Own</th><th>Sanderson's Move</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Epic: /yacht-search/bahamas/</td><td>868 visits</td><td>"bahamas yacht charter" (700 vol)</td><td>Build /yacht-charter-bahamas/ with insider itineraries + pricing</td></tr>
+    <tr><td>Epic: /booking/yacht-charter-cost/</td><td>535 visits</td><td>"how much is it to charter a yacht" (350)</td><td>Expand existing pricing page into definitive 2,000-word guide</td></tr>
+    <tr><td>Epic: /all-inclusive-yacht-charters/</td><td>109 visits</td><td>"all inclusive yacht charter caribbean" (150)</td><td>Rebuild /all-inclusive-charters/ — currently position 90</td></tr>
+    <tr><td>Epic: /below-deck-crewed-charter/</td><td>279 visits</td><td>"how much to charter a yacht on below deck" (250)</td><td>Expand existing Below Deck page — Sanderson at pos 26</td></tr>
+    <tr><td>Charter Smarter: BVI itinerary</td><td>55 visits</td><td>"bvi 7 day sailing itinerary" (200)</td><td>Build destination itinerary content for BVI, Greece, Croatia</td></tr>
+    <tr><td>WorldwideBoat: /crewed-charter-cost/</td><td>3,251 visits</td><td>"how much does it cost to charter a yacht" (1,100)</td><td>#1 organic prize. Sanderson's pricing page can compete.</td></tr>
+    <tr><td>OceanGetaways: /yacht-charter-cost</td><td>1,166 visits</td><td>Same cost cluster</td><td>DR 19 — Sanderson's DR class. Proof this is beatable.</td></tr>
+  </tbody>
+</table>
+
+<!-- ============================================ -->
+<div class="section-divider"></div>
+<h2>8. The 90-Day Plan — Who Does What</h2>
+<!-- ============================================ -->
+
+<p>Every line item is tagged: <span class="tag tag-figmints">FIGMINTS OWNS</span> means we execute it — Erin doesn't have to think about it. <span class="tag tag-client">CLIENT INPUT NEEDED</span> means we need a specific approval, asset, or decision from Erin before we can ship. <span class="tag tag-collab">COLLABORATIVE</span> means we draft it, Erin reviews it.</p>
+
+<div class="timeline">
+  <div class="timeline-item">
+    <div class="timeline-marker">D1–30</div>
+    <div class="timeline-content">
+      <h4>Month 1: Fix What Exists, Build the Foundation</h4>
+
+      <p><strong>Messaging + Story (must happen first — everything else depends on it):</strong></p>
+      <table class="ownership-table">
+        <thead><tr><th>Deliverable</th><th style="width:140px">Owner</th><th>Detail</th></tr></thead>
+        <tbody>
+          <tr><td>Present messaging framework to Erin</td><td class="owner-cell"><span class="tag tag-figmints">FIGMINTS</span></td><td>Walk through pillars, trueline, StoryBrand script, page flow. One meeting.</td></tr>
+          <tr><td>Messaging approval</td><td class="owner-cell"><span class="tag tag-client">ERIN</span></td><td>Approve or adjust the headline, pillars, and voice direction. This unlocks every downstream deliverable.</td></tr>
+          <tr><td>Pricing ranges for cost guide</td><td class="owner-cell"><span class="tag tag-client">ERIN</span></td><td>We need real price ranges by yacht type, destination, and season. We'll structure and write the page — Erin provides the numbers.</td></tr>
+          <tr><td>Confirm destination priorities</td><td class="owner-cell"><span class="tag tag-client">ERIN</span></td><td>Quick confirmation: which 6 destinations should we build first? We'll recommend based on data; Erin confirms based on business reality.</td></tr>
+        </tbody>
+      </table>
+
+      <p><strong>On-Site SEO (Figmints executes — no client action needed):</strong></p>
+      <table class="ownership-table">
+        <thead><tr><th>Deliverable</th><th style="width:140px">Owner</th><th>Detail</th></tr></thead>
+        <tbody>
+          <tr><td>Rewrite all title tags + meta descriptions</td><td class="owner-cell"><span class="tag tag-figmints">FIGMINTS</span></td><td>All existing ranking pages. Pricing page title rewrite is the single fastest win.</td></tr>
+          <tr><td>Add FAQ schema to existing pages</td><td class="owner-cell"><span class="tag tag-figmints">FIGMINTS</span></td><td>Pricing page, Below Deck page, yacht vs cruise page. Directly improves SERP visibility.</td></tr>
+          <tr><td>Internal linking audit + fixes</td><td class="owner-cell"><span class="tag tag-figmints">FIGMINTS</span></td><td>Connect existing blog posts to highest-value commercial pages.</td></tr>
+          <tr><td>Rebuild pricing page into cost guide</td><td class="owner-cell"><span class="tag tag-collab">COLLAB</span></td><td>Figmints writes the 2,000-word guide. Erin provides/approves the price ranges.</td></tr>
+          <tr><td>Rebuild /all-inclusive-charters/</td><td class="owner-cell"><span class="tag tag-figmints">FIGMINTS</span></td><td>New H1, keyword-focused content, destination variants, FAQ schema. Target: page 1 in 60 days.</td></tr>
+          <tr><td>Expand /charter-below-deck-yachts/</td><td class="owner-cell"><span class="tag tag-figmints">FIGMINTS</span></td><td>More vessels, pricing detail, "how to book" section. Push from pos 26 to top 10.</td></tr>
+          <tr><td>Fix homepage meta tags</td><td class="owner-cell"><span class="tag tag-figmints">FIGMINTS</span></td><td>Include "luxury yacht charter" in title. Set up for long-term Tier 3 targeting.</td></tr>
+        </tbody>
+      </table>
+
+      <p><strong>Conversion Assets:</strong></p>
+      <table class="ownership-table">
+        <thead><tr><th>Deliverable</th><th style="width:140px">Owner</th><th>Detail</th></tr></thead>
+        <tbody>
+          <tr><td>Build /for-travel-advisors/ landing page</td><td class="owner-cell"><span class="tag tag-figmints">FIGMINTS</span></td><td>Full StoryBrand page flow from Section 5. Hero → Problem → Mechanism → Proof → Plan → CTA → FAQ.</td></tr>
+          <tr><td>Inquiry form audit + optimization</td><td class="owner-cell"><span class="tag tag-figmints">FIGMINTS</span></td><td>Reduce fields, add social proof, add "what happens next" language, ensure mobile optimization.</td></tr>
+          <tr><td>Page-specific CTAs</td><td class="owner-cell"><span class="tag tag-figmints">FIGMINTS</span></td><td>Destination pages → "Plan Your [X] Charter." Pricing → "Get a Custom Quote." Advisor → "Book a Partner Call."</td></tr>
+          <tr><td>Review existing advisor materials</td><td class="owner-cell"><span class="tag tag-collab">COLLAB</span></td><td>Erin shares current presentation, one-pager, welcome email, marketing kit. Figmints reviews and prioritizes what to sharpen first.</td></tr>
+        </tbody>
+      </table>
+
+      <p><strong>HubSpot (we have access):</strong></p>
+      <table class="ownership-table">
+        <thead><tr><th>Deliverable</th><th style="width:140px">Owner</th><th>Detail</th></tr></thead>
+        <tbody>
+          <tr><td>Audit current workflows + lifecycle stages</td><td class="owner-cell"><span class="tag tag-figmints">FIGMINTS</span></td><td>Map what exists, identify gaps, recommend structure.</td></tr>
+          <tr><td>Set up source attribution tracking</td><td class="owner-cell"><span class="tag tag-figmints">FIGMINTS</span></td><td>Ensure every inquiry has a clear channel source. Fix UTM strategy.</td></tr>
+          <tr><td>Build advisor vs. direct contact segmentation</td><td class="owner-cell"><span class="tag tag-figmints">FIGMINTS</span></td><td>Two distinct pipelines in HubSpot for advisor-sourced and direct inquiries.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="timeline-item">
+    <div class="timeline-marker">D31–60</div>
+    <div class="timeline-content">
+      <h4>Month 2: Build the Destination Architecture</h4>
+
+      <table class="ownership-table">
+        <thead><tr><th>Deliverable</th><th style="width:140px">Owner</th><th>Detail</th></tr></thead>
+        <tbody>
+          <tr><td>Publish 6 destination pages</td><td class="owner-cell"><span class="tag tag-figmints">FIGMINTS</span></td><td>Croatia, Greece, Italy, Bahamas, Turkey, Mediterranean hub. ~1,200–1,500 words each. Consistent template: overview, best time, sample itinerary, yacht types, pricing ranges, FAQ schema, internal links.</td></tr>
+          <tr><td>Publish /destinations/ hub page</td><td class="owner-cell"><span class="tag tag-figmints">FIGMINTS</span></td><td>Links to all destination pages. Internal linking backbone.</td></tr>
+          <tr><td>Cross-link entire site architecture</td><td class="owner-cell"><span class="tag tag-figmints">FIGMINTS</span></td><td>Every destination → pricing. Pricing → destinations. Homepage → all key pages. Distribute authority.</td></tr>
+          <tr><td>Begin backlink outreach (3–5 targets)</td><td class="owner-cell"><span class="tag tag-figmints">FIGMINTS</span></td><td>Travel publications, luxury lifestyle blogs, yacht directories that link to competitors but not Sanderson.</td></tr>
+          <tr><td>Sharpen advisor materials</td><td class="owner-cell"><span class="tag tag-collab">COLLAB</span></td><td>Rewrite one-pager and welcome email with approved messaging. Lower cognitive load, sharper CTA.</td></tr>
+          <tr><td>HubSpot workflow builds</td><td class="owner-cell"><span class="tag tag-figmints">FIGMINTS</span></td><td>Inquiry follow-up sequence, advisor onboarding sequence, lead qualification automation.</td></tr>
+          <tr><td>Newsletter infrastructure</td><td class="owner-cell"><span class="tag tag-collab">COLLAB</span></td><td>Recommend tool (HubSpot vs. external to manage marketing contact costs). Set up two segments: direct clients + travel advisors.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="timeline-item">
+    <div class="timeline-marker">D61–90</div>
+    <div class="timeline-content">
+      <h4>Month 3: Expand, Measure, Optimize</h4>
+
+      <table class="ownership-table">
+        <thead><tr><th>Deliverable</th><th style="width:140px">Owner</th><th>Detail</th></tr></thead>
+        <tbody>
+          <tr><td>Publish 5 more pages</td><td class="owner-cell"><span class="tag tag-figmints">FIGMINTS</span></td><td>Maldives, Catamaran Charters, Family Yacht Charters, First-Time Guide, Caribbean hub.</td></tr>
+          <tr><td>Re-pull Ahrefs data + measure progress</td><td class="owner-cell"><span class="tag tag-figmints">FIGMINTS</span></td><td>Compare all 5 KPIs against baseline. Keyword count, traffic, DR, page-1 rankings, conversion rate.</td></tr>
+          <tr><td>GSC analysis: impressions + CTR by page</td><td class="owner-cell"><span class="tag tag-figmints">FIGMINTS</span></td><td>Identify which pages are getting impressions but low clicks — rewrite those meta descriptions.</td></tr>
+          <tr><td>Inquiry source attribution report</td><td class="owner-cell"><span class="tag tag-figmints">FIGMINTS</span></td><td>First real report on which pages drive inquiries and from what channels.</td></tr>
+          <tr><td>Evaluate ads takeover readiness</td><td class="owner-cell"><span class="tag tag-collab">COLLAB</span></td><td>New landing pages + messaging give paid campaigns better destinations. Discuss Sabrina handoff timing.</td></tr>
+          <tr><td>Social media content plan</td><td class="owner-cell"><span class="tag tag-collab">COLLAB</span></td><td>2+ posts/month minimum. Figmints creates visuals + copy. Formats: destination carousels, pricing mythbusters, charter education clips, founder video repurposing.</td></tr>
+          <tr><td>Continue backlink outreach</td><td class="owner-cell"><span class="tag tag-figmints">FIGMINTS</span></td><td>Target: 10–15 new referring domains by end of Month 3.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<div class="section-divider"></div>
+<h2>9. Domain Authority — How to Grow from DR 14</h2>
+<!-- ============================================ -->
+
+<p>Sanderson has 63 referring domains. Epic has 232. For Tier 1 keywords (KD 0–20), Sanderson's current authority is often sufficient. Here's the pragmatic path:</p>
+
+<h4>High-leverage backlink opportunities:</h4>
+<ul>
+  <li><strong>Travel advisor associations and directories:</strong> Any association Erin speaks at or partners with should link to Sanderson.</li>
+  <li><strong>Boat show and industry event coverage:</strong> 45+ boat shows = 45+ potential link sources from event sites, recap articles, exhibitor directories.</li>
+  <li><strong>PR placements:</strong> The outside PR vendor should be securing links, not just mentions. Every placement should include a followed link to a relevant page.</li>
+  <li><strong>Guest content on advisor-facing publications:</strong> Erin's "how to sell yacht charters" expertise is genuinely valuable content for these outlets.</li>
+  <li><strong>Yacht listing aggregators:</strong> YachtCharterFleet, CharterWorld, etc. — ensure Sanderson is listed with active links.</li>
+</ul>
+
+<div class="callout">
+  <strong>Realistic DR trajectory:</strong> DR 14 → 25–30 within 6–9 months. That puts Sanderson in the same class as Epic and unlocks Tier 2 keywords. The key is 10–15 new referring domains per month from relevant sources.
+</div>
+
+<!-- ============================================ -->
+<div class="section-divider"></div>
+<h2>10. Quick Wins — Things That Can Move This Week</h2>
+<!-- ============================================ -->
+
+<table>
+  <thead>
+    <tr><th>Action</th><th>Effort</th><th>Impact</th><th>Owner</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Rewrite title tag on /yacht-charter-pricing-and-costs/ to include "How Much Does a Yacht Charter Cost"</td><td>10 min</td><td>Improved CTR on existing #1 ranking</td><td><span class="tag tag-figmints">FIGMINTS</span></td></tr>
+    <tr><td>Add FAQ schema markup to pricing, Below Deck, and yacht vs cruise pages</td><td>1–2 hrs</td><td>FAQ rich snippets in SERPs</td><td><span class="tag tag-figmints">FIGMINTS</span></td></tr>
+    <tr><td>Rewrite meta descriptions for all 8 ranking pages</td><td>1 hr</td><td>3–5% CTR improvement</td><td><span class="tag tag-figmints">FIGMINTS</span></td></tr>
+    <tr><td>Add internal links from every blog post to pricing + all-inclusive pages</td><td>30 min</td><td>Pass authority to highest-value pages</td><td><span class="tag tag-figmints">FIGMINTS</span></td></tr>
+    <tr><td>Submit updated sitemap to Google Search Console</td><td>5 min</td><td>Faster crawling of rebuilt pages</td><td><span class="tag tag-figmints">FIGMINTS</span></td></tr>
+    <tr><td>Link /for-travel-advisors/ from main navigation (when built)</td><td>5 min</td><td>Makes advisor path discoverable sitewide</td><td><span class="tag tag-figmints">FIGMINTS</span></td></tr>
+  </tbody>
+</table>
+
+<!-- ============================================ -->
+<div class="section-divider"></div>
+<!-- ============================================ -->
+
+<div class="exec-summary">
+  <h2>Summary: What Erin Needs to Do vs. What Figmints Owns</h2>
+  <p style="margin-bottom:20px;">The whole point is to take things off Erin's plate. Here's the short list of what we actually need from her:</p>
+  <p><strong>From Erin (4 things, total):</strong></p>
+  <ul style="margin-bottom:20px;">
+    <li><strong>Approve the messaging direction</strong> — one meeting to walk through the framework, then a yes/no.</li>
+    <li><strong>Provide pricing ranges</strong> — by yacht type, destination, and season. We write the page; she provides the numbers.</li>
+    <li><strong>Confirm destination priorities</strong> — we recommend based on keyword data; she confirms based on what Sanderson actually sells.</li>
+    <li><strong>Share current advisor materials</strong> — presentation, one-pager, welcome email. We review and sharpen.</li>
+  </ul>
+  <p><strong>Figmints owns everything else:</strong> page builds, SEO optimization, title tags, meta descriptions, FAQ schema, internal linking, HubSpot workflows, attribution setup, backlink outreach, content creation, advisor landing page, inquiry form optimization, site architecture, and monthly reporting.</p>
+</div>
+
+<div style="margin-top:48px;padding:40px;background:var(--light);border-radius:8px;text-align:center;">
+  <p style="font-size:13px;color:var(--gray);margin-bottom:8px;">PREPARED BY</p>
+  <p style="font-size:20px;font-weight:700;color:var(--navy);margin-bottom:4px;">Figmints</p>
+  <p style="font-size:14px;color:var(--gray);">Data pulled from Ahrefs API — April 15, 2026</p>
+  <p style="font-size:14px;color:var(--gray);">All keyword volumes, difficulty scores, and traffic estimates are Ahrefs metrics for the US market.</p>
+</div>
+
+</div>
+</body>
+</html>
